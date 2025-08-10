@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000000;
+            color: #212529;
+            padding: 10px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #353535;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 5px groove #f4f4f4;
+        }
+        
+        .header {
+            background: #212529;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 0.9rem;
+        }
+        
+        .subject-input {
+            padding: 15px;
+            border-bottom: 2px solid #e9ecef;
+            background: #f8f9fa;
+        }
+        
+        .subject-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .subject-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .subject-input input:focus {
+            outline: none;
+            border-color: #495057;
+        }
+        
+        .grade-sections {
+            padding: 10px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #343a40;
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .section-content {
+            padding: 15px;
+            background: white;
+        }
+        
+        .weight-input {
+            margin-bottom: 15px;
+        }
+        
+        .weight-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .weight-input input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .grades-table th {
+            background: #6c757d;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .grades-table td {
+            padding: 8px 6px;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        .grades-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .grades-table tr:nth-child(odd) {
+            background: white;
+        }
+        
+        .grades-table input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ced4da;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 0.85rem;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+        
+        .grades-table input[type="text"] {
+            text-align: left;
+        }
+        
+        /* Mobile-specific table styling */
+        @media (max-width: 768px) {
+            .grades-table {
+                font-size: 0.8rem;
+            }
+            
+            .grades-table th,
+            .grades-table td {
+                padding: 6px 4px;
+            }
+            
+            .grades-table th {
+                font-size: 0.7rem;
+            }
+            
+            .grades-table input {
+                padding: 4px;
+                font-size: 0.8rem;
+            }
+            
+            .grades-table th:first-child,
+            .grades-table td:first-child {
+                width: 35%;
+            }
+            
+            .grades-table th:nth-child(2),
+            .grades-table td:nth-child(2),
+            .grades-table th:nth-child(3),
+            .grades-table td:nth-child(3) {
+                width: 20%;
+            }
+            
+            .grades-table th:last-child,
+            .grades-table td:last-child {
+                width: 25%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .grades-table {
+                font-size: 0.75rem;
+            }
+            
+            .grades-table th,
+            .grades-table td {
+                padding: 4px 2px;
+            }
+            
+            .grades-table th {
+                font-size: 0.65rem;
+            }
+            
+            .grades-table input {
+                padding: 3px;
+                font-size: 0.75rem;
+            }
+        }
+        
+        .add-row-btn {
+            background: #495057;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .add-row-btn:hover {
+            background: #343a40;
+        }
+        
+        .summary {
+            background: #212529;
+            color: white;
+            padding: 20px 15px;
+            margin-top: 20px;
+        }
+        
+        .summary h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+        
+        .summary-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .grade-scale {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-left: 4px solid #343a40;
+        }
+        
+        .grade-scale h4 {
+            margin-bottom: 8px;
+            color: #343a40;
+            font-size: 1rem;
+        }
+        
+        .scale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            font-size: 0.8rem;
+            color: black;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .summary-item {
+                padding: 10px;
+            }
+            
+            .summary-item h3 {
+                font-size: 1rem;
+            }
+            
+            .summary-item p {
+                font-size: 0.75rem;
+            }
+            
+            .grade-scale {
+                padding: 10px;
+                margin-top: 10px;
+            }
+            
+            .scale-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .summary h2 {
+                font-size: 1.1rem;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .summary-item {
+                padding: 8px;
+            }
+            
+            .summary-item h3 {
+                font-size: 0.9rem;
+            }
+            
+            .summary-item p {
+                font-size: 0.7rem;
+            }
+            
+            .grade-scale h4 {
+                font-size: 0.9rem;
+            }
+            
+            .scale-grid {
+                grid-template-columns: 1fr;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Grade Tracker</h1>
+            <p>Track your activities, quizzes, and exams to calculate your final grade</p>
+        </div>
+        
+        <div class="subject-input">
+            <label for="subject-name"><strong>Subject Name:</strong></label>
+            <input type="text" id="subject-name" placeholder="Enter your subject name (e.g., Information Technology, Arts Appreciation)" value="Information Technology">
+        </div>
+        
+        <div class="grade-sections">
+            <!-- Activities Section -->
+            <div class="section">
+                <div class="section-header">📝 Activities & Assignments</div>
+                <div class="section-content">
+                    <div class="weight-input">
+                        <label>Weight (%):</label>
+                        <input type="number" id="activities-weight" value="30" min="0" max="100">
+                    </div>
+                    <table class="grades-table" id="activities-table">
+                        <thead>
+                            <tr>
+                                <th>Activity Name</th>
+                                <th>Score</th>
+                                <th>Max Points</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Activity 1"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td class="percentage">0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-row-btn" onclick="addRow('activities-table')">+ Add Activity</button>
+                </div>
+            </div>
+            
+            <!-- Quizzes Section -->
+            <div class="section">
+                <div class="section-header">📋 Quizzes</div>
+                <div class="section-content">
+                    <div class="weight-input">
+                        <label>Weight (%):</label>
+                        <input type="number" id="quizzes-weight" value="30" min="0" max="100">
+                    </div>
+                    <table class="grades-table" id="quizzes-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz Name</th>
+                                <th>Score</th>
+                                <th>Max Points</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Quiz 1"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td class="percentage">0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-row-btn" onclick="addRow('quizzes-table')">+ Add Quiz</button>
+                </div>
+            </div>
+            
+            <!-- Exams Section -->
+            <div class="section">
+                <div class="section-header">📖 Exams</div>
+                <div class="section-content">
+                    <div class="weight-input">
+                        <label>Weight (%):</label>
+                        <input type="number" id="exams-weight" value="40" min="0" max="100">
+                    </div>
+                    <table class="grades-table" id="exams-table">
+                        <thead>
+                            <tr>
+                                <th>Exam Name</th>
+                                <th>Score</th>
+                                <th>Max Points</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Prelim Exam"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                                <td class="percentage">0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="add-row-btn" onclick="addRow('exams-table')">+ Add Exam</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h2>📊 Grade Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <h3 id="activities-avg">0.0%</h3>
+                    <p>Activities Average</p>
+                </div>
+                <div class="summary-item">
+                    <h3 id="quizzes-avg">0.0%</h3>
+                    <p>Quizzes Average</p>
+                </div>
+                <div class="summary-item">
+                    <h3 id="exams-avg">0.0%</h3>
+                    <p>Exams Average</p>
+                </div>
+                <div class="summary-item">
+                    <h3 id="final-grade">0.0%</h3>
+                    <p>Final Grade</p>
+                </div>
+                <div class="summary-item">
+                    <h3 id="letter-grade">5.00</h3>
+                    <p>College Grade</p>
+                </div>
+                <div class="summary-item">
+                    <h3 id="gpa-points">0.0</h3>
+                    <p>Quality Points</p>
+                </div>
+            </div>
+            
+            <div class="grade-scale">
+                <h4>College Grade Scale</h4>
+                <div class="scale-grid">
+                    <div><strong>1.00 (A):</strong> 95-100%</div>
+                    <div><strong>1.25 (A-):</strong> 92-94%</div>
+                    <div><strong>1.50 (B+):</strong> 89-91%</div>
+                    <div><strong>1.75 (B):</strong> 86-88%</div>
+                    <div><strong>2.00 (B-):</strong> 83-85%</div>
+                    <div><strong>2.25 (C+):</strong> 80-82%</div>
+                    <div><strong>2.50 (C):</strong> 77-79%</div>
+                    <div><strong>2.75 (C-):</strong> 74-76%</div>
+                    <div><strong>3.00 (D):</strong> 65-73%</div>
+                    <div><strong>5.00 (F):</strong> Below 65%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calculatePercentage(input) {
+            const row = input.closest('tr');
+            const scoreInput = row.querySelector('td:nth-child(2) input');
+            const maxInput = row.querySelector('td:nth-child(3) input');
+            const percentageCell = row.querySelector('.percentage');
+            
+            const score = parseFloat(scoreInput.value) || 0;
+            const max = parseFloat(maxInput.value) || 0;
+            
+            if (max > 0) {
+                const percentage = (score / max) * 100;
+                percentageCell.textContent = percentage.toFixed(1) + '%';
+            } else {
+                percentageCell.textContent = '0%';
+            }
+            
+            updateSummary();
+        }
+        
+        function addRow(tableId) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const newRow = tbody.insertRow();
+            
+            const placeholder = tableId.includes('activities') ? 'Activity' : 
+                              tableId.includes('quizzes') ? 'Quiz' : 'Exam';
+            const count = tbody.querySelectorAll('tr').length;
+            
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="${placeholder} ${count}"></td>
+                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                <td><input type="number" min="0" step="0.01" oninput="calculatePercentage(this)"></td>
+                <td class="percentage">0%</td>
+            `;
+        }
+        
+        function calculateSectionAverage(tableId) {
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tbody tr');
+            let totalScore = 0;
+            let totalMax = 0;
+            let validRows = 0;
+            
+            rows.forEach(row => {
+                const scoreInput = row.querySelector('td:nth-child(2) input');
+                const maxInput = row.querySelector('td:nth-child(3) input');
+                
+                const score = parseFloat(scoreInput.value) || 0;
+                const max = parseFloat(maxInput.value) || 0;
+                
+                if (max > 0) {
+                    totalScore += score;
+                    totalMax += max;
+                    validRows++;
+                }
+            });
+            
+            return totalMax > 0 ? (totalScore / totalMax) * 100 : 0;
+        }
+        
+        function updateSummary() {
+            const activitiesAvg = calculateSectionAverage('activities-table');
+            const quizzesAvg = calculateSectionAverage('quizzes-table');
+            const examsAvg = calculateSectionAverage('exams-table');
+            
+            const activitiesWeight = parseFloat(document.getElementById('activities-weight').value) || 0;
+            const quizzesWeight = parseFloat(document.getElementById('quizzes-weight').value) || 0;
+            const examsWeight = parseFloat(document.getElementById('exams-weight').value) || 0;
+            
+            const totalWeight = activitiesWeight + quizzesWeight + examsWeight;
+            let finalGrade = 0;
+            
+            if (totalWeight > 0) {
+                finalGrade = (activitiesAvg * activitiesWeight + 
+                            quizzesAvg * quizzesWeight + 
+                            examsAvg * examsWeight) / totalWeight;
+            }
+            
+            document.getElementById('activities-avg').textContent = activitiesAvg.toFixed(1) + '%';
+            document.getElementById('quizzes-avg').textContent = quizzesAvg.toFixed(1) + '%';
+            document.getElementById('exams-avg').textContent = examsAvg.toFixed(1) + '%';
+            document.getElementById('final-grade').textContent = finalGrade.toFixed(1) + '%';
+            
+            // Calculate college grade (Philippine system)
+            let collegeGrade = 5.00;
+            let qualityPoints = 0.0;
+            
+            if (finalGrade >= 95) {
+                collegeGrade = 1.00;
+                qualityPoints = 4.0;
+            } else if (finalGrade >= 92) {
+                collegeGrade = 1.25;
+                qualityPoints = 3.75;
+            } else if (finalGrade >= 89) {
+                collegeGrade = 1.50;
+                qualityPoints = 3.5;
+            } else if (finalGrade >= 86) {
+                collegeGrade = 1.75;
+                qualityPoints = 3.25;
+            } else if (finalGrade >= 83) {
+                collegeGrade = 2.00;
+                qualityPoints = 3.0;
+            } else if (finalGrade >= 80) {
+                collegeGrade = 2.25;
+                qualityPoints = 2.75;
+            } else if (finalGrade >= 77) {
+                collegeGrade = 2.50;
+                qualityPoints = 2.5;
+            } else if (finalGrade >= 74) {
+                collegeGrade = 2.75;
+                qualityPoints = 2.25;
+            } else if (finalGrade >= 65) {
+                collegeGrade = 3.00;
+                qualityPoints = 2.0;
+            } else {
+                collegeGrade = 5.00;
+                qualityPoints = 0.0;
+            }
+            
+            document.getElementById('letter-grade').textContent = collegeGrade.toFixed(2);
+            document.getElementById('gpa-points').textContent = qualityPoints.toFixed(1);
+        }
+        
+        // Add event listeners for weight changes
+        document.getElementById('activities-weight').addEventListener('input', updateSummary);
+        document.getElementById('quizzes-weight').addEventListener('input', updateSummary);
+        document.getElementById('exams-weight').addEventListener('input', updateSummary);
+        
+        // Initialize
+        updateSummary();
+    </script>
+</body>
+</html>
